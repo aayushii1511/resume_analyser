@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { getUserProfile } from "@/lib/api"
 
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { Navbar } from "@/components/dashboard/navbar"
@@ -12,27 +13,42 @@ import { StatsOverview } from "@/components/dashboard/stats-overview"
 
 export default function Dashboard() {
   const router = useRouter()
+  const [userName, setUserName] = useState<string>("")
 
-useEffect(() => {
-  const token = localStorage.getItem("token")
+  useEffect(() => {
+    const token = localStorage.getItem("token")
 
-  if (!token) {
-    router.push("/login")
-  }
-}, [])
+    if (!token) {
+      router.push("/login")
+      return
+    }
+
+    // Fetch user profile
+    const fetchProfile = async () => {
+      try {
+        const profile = await getUserProfile(token)
+        setUserName(profile.name || "User")
+      } catch (err) {
+        console.error("Failed to fetch profile:", err)
+        setUserName("User")
+      }
+    }
+
+    fetchProfile()
+  }, [])
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
       
       {/* Main Content */}
       <div className="pl-16 transition-all duration-300 md:pl-64">
-        <Navbar />
+        <Navbar userName={userName} />
         
         <main className="p-6">
           {/* Welcome Section */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-foreground">
-              Welcome back, John
+              Welcome back, {userName}
             </h2>
             <p className="mt-1 text-muted-foreground">
               Track your progress and continue your learning journey

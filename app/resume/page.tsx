@@ -60,15 +60,18 @@ function parseAnalysis(raw: string): AnalysisResult {
 }
 
 async function extractTextFromFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result as string;
-      resolve(text && text.length > 10 ? text : `Resume: ${file.name}`);
-    };
-    reader.onerror = () => reject(new Error('Failed to read file'));
-    reader.readAsText(file);
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch('http://localhost:5000/api/ai/extract', {
+    method: 'POST',
+    body: formData,
   });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'File parsing failed');
+  
+  return data.text;
 }
 
 export default function ResumeAnalyzerPage() {

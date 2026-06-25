@@ -3,8 +3,21 @@
 import { Bell, Search, Settings } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
-export function Navbar() {
+interface NavbarProps {
+  userName?: string
+}
+
+export function Navbar({ userName = "User" }: NavbarProps) {
+  // Generate initials from user name
+  const initials = userName
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2)
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-background/80 px-6 backdrop-blur-sm">
       <div className="flex items-center gap-4">
@@ -29,15 +42,16 @@ export function Navbar() {
         <Button variant="ghost" size="icon" className="text-muted-foreground">
           <Bell className="h-5 w-5" />
         </Button>
-        <Button variant="ghost" size="icon" className="text-muted-foreground">
-          <Settings className="h-5 w-5" />
-        </Button>
+        <Link href="/settings">
+          <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <Settings className="h-5 w-5" />
+          </Button>
+        </Link>
 
         {/* Profile */}
         <Avatar className="h-9 w-9 cursor-pointer">
-          <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" />
           <AvatarFallback className="bg-primary text-primary-foreground">
-            JD
+            {initials}
           </AvatarFallback>
         </Avatar>
       </div>

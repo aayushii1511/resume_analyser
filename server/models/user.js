@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+const roadmapMilestoneSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  estimatedWeeks: Number,
+  skills: [String],
+  completed: { type: Boolean, default: false },
+});
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -16,6 +24,22 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+
+    resumeUploaded: {
+      type: Boolean,
+      default: false,
+    },
+
+    lastResumeAnalysis: {
+      date: Date,
+      analysis: String,
+    },
+
+    roadmap: {
+      milestones: [roadmapMilestoneSchema],
+      lastGenerated: Date,
+      generatedFromResume: String,
     },
   },
   {

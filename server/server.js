@@ -5,6 +5,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import aiRoutes from "./routes/aiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 // ─── Routes ──────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/", (req, res) => res.send("Backend API Running"));
 
